@@ -72,14 +72,14 @@
               </div>
               <!-- /Logo -->
               <h4 class="mb-4 text-primary">Cridentials Login </h4>
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+              <form id="createAcc" class="mb-3" action="index.html" method="POST">
 
                <div class="row mb-3">
 
                 <div class="col-lg-6 col-12 col-md-6">
                   <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                    <input type="text" class="form-control" id="email" name="login_email" placeholder="Enter your email" />
                   </div>
                 </div>
                 <div class="col-lg-6 col-12 col-md-6">
@@ -90,7 +90,7 @@
                         type="password"
                         id="password"
                         class="form-control"
-                        name="password"
+                        name="login_password"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password"
                       />
@@ -101,7 +101,7 @@
                   
                </div>
                 
-              </form>
+             
 
 
               
@@ -116,7 +116,6 @@
         
               <!-- /Logo -->
               <h4 class="mb-4 text-primary">Your informations</h4>
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
 
                <div class="row mb-3">
                 <div class="col-lg-4 col-12 col-md-6">
@@ -124,7 +123,7 @@
                     <label class="form-label" for="basic-icon-default-fullname">Full Name</label>
                     <div class="input-group input-group-merge">
                       <span id="basic-icon-default-fullname2" class="input-group-text"><i class="bx bx-user"></i></span>
-                      <input type="text" class="form-control" id="basic-icon-default-fullname" placeholder="full name" name="full_name" aria-label="John Doe" aria-describedby="basic-icon-default-fullname2">
+                      <input type="text" class="form-control" id="basic-icon-default-fullname" value="Amine Ait Bella" placeholder="full name" name="full_name" aria-label="John Doe" aria-describedby="basic-icon-default-fullname2">
                     </div>
                   </div>
                 </div>
@@ -135,14 +134,14 @@
                     <label class="form-label" for="basic-icon-default-phone">Phone No</label>
                     <div class="input-group input-group-merge">
                       <span id="basic-icon-default-phone2" class="input-group-text"><i class="bx bx-phone"></i></span>
-                      <input type="text" id="basic-icon-default-phone" name="phone" class="form-control phone-mask" placeholder="your phone number" aria-label="658 799 8941" aria-describedby="basic-icon-default-phone2">
+                      <input type="text" id="basic-icon-default-phone" name="phone" value="0772525374" class="form-control phone-mask" placeholder="your phone number" aria-label="658 799 8941" aria-describedby="basic-icon-default-phone2">
                     </div>
                   </div>
                 </div>
                 <div class="col-lg-4 col-12 col-md-6">
                   <div class="mb-3">
                     <label for="defaultSelect" class="form-label">Domain</label>
-                    <select id="defaultSelect" class="form-select">
+                    <select id="defaultSelect" class="form-select" name="domain">
                       <option value="Bodybuilding">Bodybuilding</option>
                       <option value="Powerlifting">Powerlifting</option>
                       <option value="Cardio">Cardio</option>
@@ -156,32 +155,32 @@
                 <div class="col-lg-4 col-12 col-md-6">
                   <div class="mb-3">
                     <label for="email" class="form-label">city</label>
-                    <input type="text" class="form-control" id="email" name="city" placeholder="Enter your city" />
+                    <input type="text" class="form-control" id="email" value="Agadir" name="city" placeholder="Enter your city" />
                   </div>
                 </div>
                 <div class="col-lg-4 col-12 col-md-6">
                   <div class="mb-3">
                     <label for="email" class="form-label">zip code</label>
-                    <input type="text" class="form-control" id="email" name="zip_code" placeholder="zip code" />
+                    <input type="text" class="form-control" id="email" value="83350" name="zip_code" placeholder="zip code" />
                   </div>
                 </div>
                 <div class="col-lg-4 col-12 col-md-6">
                   <div class="mb-3">
                     <label for="email" class="form-label">State</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="state" />
+                    <input type="text" class="form-control" id="email" value="souss" name="state" placeholder="state" />
                   </div>
                 </div>
                 <div class="col-lg-4 col-12 col-md-6">
                   <div class="mb-3">
                     <label for="email" class="form-label">Country</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="country" />
+                    <input type="text" class="form-control" id="email" name="country" value="Morocco" name="country" placeholder="country" />
                   </div>
                 </div>
 
                 <div class="col-lg-12 col-12 col-md-12">
                   <div class="mb-3">
                       <label for="exampleFormControlTextarea1" class="form-label">About me</label>
-                      <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                      <textarea class="form-control" id="exampleFormControlTextarea1" name="about_me"rows="3">Hello my name is amine </textarea>
                   </div>
                 </div>
 
@@ -193,7 +192,7 @@
 
                   <div class="mb-3">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms" />
+                    <input class="form-check-input" type="checkbox" id="terms-conditions" checked name="terms" />
                     <label class="form-check-label" for="terms-conditions">
                       I agree to
                       <a href="javascript:void(0);">privacy policy & terms</a>
@@ -242,6 +241,7 @@
 
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/sweet.js"></script>
 
     <!-- Page JS -->
 
@@ -249,3 +249,32 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
+<script>
+var createAcc = document.getElementById('createAcc');
+createAcc.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    var formData = new FormData(createAcc);
+    formData.append('ero', 'create_account');
+
+    fetch('controller/create-account.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'Success') {
+            swal("Good Job", data.message, "success");
+            setTimeout(function() {
+                window.location.href = 'login.php';
+            }, 2000);
+        } else if (data.status === 'Error') {
+            swal("Opps!", data.message, "warning");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+</script>

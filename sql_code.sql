@@ -380,6 +380,24 @@ ALTER TABLE `user_info`
   ADD CONSTRAINT `user_info_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
+
+
+ALTER TABLE subscription
+ADD CONSTRAINT fk_sub_user FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE;
+
+ALTER TABLE subscription
+ADD CONSTRAINT fk_sub_coach FOREIGN KEY (coach_id) REFERENCES coach_account(coach_id) ON DELETE CASCADE;
+
+ALTER TABLE weight_track
+ADD CONSTRAINT fk_weight_user FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE;
+
+ALTER TABLE weight_track
+ADD CONSTRAINT fk_weight_sub FOREIGN KEY (id_subscription) REFERENCES subscription(id_subscription) ON DELETE CASCADE;
+
+
+
+ALTER TABLE exercises
+ADD CONSTRAINT fk_ex_coach FOREIGN KEY (coach_id) REFERENCES coach_account(coach_id) ON DELETE CASCADE;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

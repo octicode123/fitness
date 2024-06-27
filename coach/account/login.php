@@ -1,3 +1,6 @@
+<?php
+require_once "controller/ctr.php";
+?>
 <!DOCTYPE html>
 
 <html
@@ -50,6 +53,44 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../assets/js/config.js"></script>
+
+    <style>
+    .alert {
+      padding: 20px;
+      background-color: #f44336;
+      color: white;
+      opacity: 1;
+      transition: opacity 0.6s;
+      margin-bottom: 15px;
+    }
+
+    .alert.success {
+      background-color: #04AA6D;
+    }
+
+    .alert.info {
+      background-color: #2196F3;
+    }
+
+    .alert.warning {
+      background-color: #ff9800;
+    }
+
+    .closebtn {
+      margin-left: 15px;
+      color: white;
+      font-weight: bold;
+      float: right;
+      font-size: 22px;
+      line-height: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .closebtn:hover {
+      color: black;
+    }
+  </style>
   </head>
 
   <body>
@@ -73,8 +114,22 @@
               <!-- /Logo -->
              
               <p class="mb-4">Please sign-in to your account and start the adventure</p>
+              <?php
+                        if(!empty($errors)){
+                          ?>
+                          <div class="alert">
+                            <strong>
+                                <?php
+                                foreach($errors as $err){
+                                    echo $err;
+                                }
+                                ?>
+                            </strong>
+                          </div>
 
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+                          <?php
+                        }?>
+              <form method="post" class="mb-3" action="login.php" method="POST">
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input
@@ -105,12 +160,7 @@
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
                 </div>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="remember-me" />
-                    <label class="form-check-label" for="remember-me"> Remember Me </label>
-                  </div>
-                </div>
+                
                 <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                 </div>

@@ -1,3 +1,6 @@
+<?php
+require_once "./controller/security.php";
+?>
 <!DOCTYPE html>
 
 
@@ -82,73 +85,8 @@
                                     <th>Actions</th>
                                   </tr>
                                 </thead>
-                                <tbody class="table-border-bottom-0">
-                                  <tr>
-                                    <td>  <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                        <li
-                                          data-bs-toggle="tooltip"
-                                          data-popup="tooltip-custom"
-                                          data-bs-placement="top"
-                                          class="avatar avatar-xs pull-up"
-                                          title="Lilian Fuller"
-                                        >
-                                          <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                        </li>
-                                       
-                                      
-                                      </ul></td>
-                                    <td>Albert Cook</td>
-                                    
-                                    <td><span class="badge bg-label-success me-1">Active</span></td>
-                                    <td>
-                                      <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                          <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                          <a class="dropdown-item" href="javascript:void(0);"
-                                            ><i class='bx bxs-show me-1'></i>Progress</a
-                                          >
-                                          <a class="dropdown-item" href="javascript:void(0);"
-                                            ><i class='bx bxs-hand me-1'></i> End training</a
-                                          >
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>  <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                        <li
-                                          data-bs-toggle="tooltip"
-                                          data-popup="tooltip-custom"
-                                          data-bs-placement="top"
-                                          class="avatar avatar-xs pull-up"
-                                          title="Lilian Fuller"
-                                        >
-                                          <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                        </li>
-                                       
-                                      
-                                      </ul></td>
-                                    <td>Jhon doe</td>
-                                    
-                                    <td><span class="badge bg-label-danger me-1">Stoped</span></td>
-                                    <td>
-                                      <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                          <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                          <a class="dropdown-item" href="javascript:void(0);"
-                                            ><i class='bx bxs-show me-1'></i>Progress</a
-                                          >
-                                          <a class="dropdown-item" href="javascript:void(0);"
-                                            ><i class='bx bxs-hand me-1'></i> End training</a
-                                          >
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
+                                <tbody class="table-border-bottom-0" id="data">
+                                
                                 </tbody>
                               </table>
                             </div>
@@ -197,3 +135,33 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
+<script>
+  customers()
+    function customers() {
+    var formData = new FormData();
+    formData.append('ero', 'customer');
+
+    fetch('./controller/customer.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(message => {
+        document.getElementById('data').innerHTML = message;
+
+      
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        swal("Error", "An error occurred while processing your request", "error");
+      });
+
+   
+  }
+
+</script>
