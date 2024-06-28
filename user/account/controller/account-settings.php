@@ -18,14 +18,14 @@ if (isset($_POST["ero"])) {
     }
 
     if ($_POST["ero"] === 'profile_img') {
-        $account = $pdo->prepare("SELECT picture FROM coach_account WHERE user_id=:user_id LIMIT 1");
+        $account = $pdo->prepare("SELECT picture FROM user_info WHERE user_id=:user_id LIMIT 1");
         $account->bindParam(':user_id', $user_id);
         $account->execute();
         $result = $account->fetch();
         if ($result["picture"] == NULL) {
             $path = "../assets/img/avatars/1.png";
         } else {
-            $path = "../../../../fitness_img/coach/" . $result["picture"];
+            $path = "../../../../fitness_img/user/" . $result["picture"];
         }
 
 ?>
@@ -76,24 +76,25 @@ if (isset($_POST["ero"])) {
         }
 
         if (empty($errors)) {
-            if (move_uploaded_file($_FILES['photos']['tmp_name'], '../../../../fitness_img/coach/' . $filename)) {
 
-                $filepath = '../../../../fitness_img/coach/' . $filename;
+            if (move_uploaded_file($_FILES['photos']['tmp_name'], '../../../../fitness_img/user/' . $filename)) {
 
-                $remove = $pdo->prepare("SELECT picture FROM coach_account WHERE user_id=:user_id LIMIT 1");
+                $filepath = '../../../../fitness_img/user/' . $filename;
+
+                $remove = $pdo->prepare("SELECT picture FROM user_info WHERE user_id=:user_id LIMIT 1");
                 $remove->bindParam(':user_id', $user_id);
                 $remove->execute();
                 $result_rm = $remove->fetch();
                 if ($result_rm) {
                     $img = $result_rm["picture"];
 
-                    $folderPath = '../../../../fitness_img/coach/';
+                    $folderPath = '../../../../fitness_img/user/';
 
                     $filePath = $folderPath . $img;
 
                     if ($img == NULL) {
 
-                        $update = $pdo->prepare("UPDATE coach_account SET picture=:photos WHERE user_id=:user_id");
+                        $update = $pdo->prepare("UPDATE user_info SET picture=:photos WHERE user_id=:user_id");
                         $update->bindParam(':photos', $filename);
                         $update->bindParam(':user_id', $user_id);
                         if ($update->execute()) {
@@ -104,7 +105,7 @@ if (isset($_POST["ero"])) {
                     } else {
                         if (file_exists($filePath)) {
                             if (unlink($filePath)) {
-                                $update = $pdo->prepare("UPDATE coach_account SET picture=:photos WHERE user_id=:user_id");
+                                $update = $pdo->prepare("UPDATE user_info SET picture=:photos WHERE user_id=:user_id");
                                 $update->bindParam(':photos', $filename);
                                 $update->bindParam(':user_id', $user_id);
                                 if ($update->execute()) {
@@ -128,61 +129,72 @@ if (isset($_POST["ero"])) {
         }
     }
     if($_POST["ero"]==='update_account'){
-            if (   isset($_POST['full_name']) && !empty($_POST['full_name'])
-                && isset($_POST['phone']) && !empty($_POST['phone'])
-                && isset($_POST['domain']) && !empty($_POST['domain'])
-                && isset($_POST['city']) && !empty($_POST['city'])
-                && isset($_POST['zip_code']) && !empty($_POST['zip_code'])
-                && isset($_POST['state']) && !empty($_POST['state'])
-                && isset($_POST['country']) && !empty($_POST['country'])
-                && isset($_POST['about_me']) && !empty($_POST['about_me'])) {
-    
-                // Sanitize and validate input data
-                $full_name = filter_var($_POST['full_name']);
-                $phone = filter_var($_POST['phone']);
-                $domain = filter_var($_POST['domain']);
-                $city = filter_var($_POST['city']);
-                $zip_code = filter_var($_POST['zip_code']);
-                $state = filter_var($_POST['state']);
-                $country = filter_var($_POST['country']);
-                $about_me = filter_var($_POST['about_me']);
-    
-                // Prepare SQL statement to update coach_account
-                $query = "UPDATE coach_account SET
-                            full_name = :full_name,
-                            phone = :phone,
-                            domain = :domain,
-                            city = :city,
-                            zipcode = :zipcode,
-                            state = :state,
-                            country = :country,
-                            about_me = :about_me
-                          WHERE user_id = :user_id";
-                
-                $stmt = $pdo->prepare($query);
-    
-                // Bind parameters
-                $stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
-                $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
-                $stmt->bindParam(':domain', $domain, PDO::PARAM_STR);
-                $stmt->bindParam(':city', $city, PDO::PARAM_STR);
-                $stmt->bindParam(':zipcode', $zip_code, PDO::PARAM_STR);
-                $stmt->bindParam(':state', $state, PDO::PARAM_STR);
-                $stmt->bindParam(':country', $country, PDO::PARAM_STR);
-                $stmt->bindParam(':about_me', $about_me, PDO::PARAM_STR);
-                $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    
-                if ($stmt->execute()) {
-                    jsonResponse('Success', 'Coach account updated successfully');
-
-                } else {
-                    jsonResponse('Error', 'Error please try again');
-
-                }
-            } else {
-                jsonResponse('Error', 'All the fields are required');
-
+        $requiredFields = ['firstName', 'phone', 'birthday', 'height', 'weight'];
+        foreach ($requiredFields as $field) {
+            if (!isset($_POST[$field]) || empty($_POST[$field])) {
+                jsonResponse('Error', ucwords(str_replace('_', ' ', $field)) . ' is required.');
             }
+        }
+    
+        // Sanitize and retrieve form data
+        $full_name = htmlspecialchars($_POST['firstName']);
+        $phone = htmlspecialchars($_POST['phone']);
+        $birthday = htmlspecialchars($_POST['birthday']);
+        $height = htmlspecialchars($_POST['height']);
+        $weight = htmlspecialchars($_POST['weight']);
+    
+        // Perform additional validation
+        $errors = [];
+    
+        // Phone number validation (basic validation)
+        if (!preg_match('/^\+?\d{10,13}$/', $phone)) {
+            $errors[] = 'Invalid phone number format';
+        }
+    
+        // Date validation (example: must be in YYYY-MM-DD format)
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $birthday)) {
+            $errors[] = 'Invalid birthday format. Use YYYY-MM-DD';
+        }
+    
+        // Height and weight validation (must be numeric and positive)
+        if (!is_numeric($height) || $height <= 0) {
+            $errors[] = 'Height must be a positive number';
+        }
+    
+        if (!is_numeric($weight) || $weight <= 0) {
+            $errors[] = 'Weight must be a positive number';
+        }
+    
+        // If there are errors, return them as JSON response
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                jsonResponse('Error', $error);
+            }
+        }
+    
+        // If all validations pass, proceed with database update
+        try {
+            // Assuming $pdo is your PDO connection
+            $updateQuery = "UPDATE user_info 
+                            SET full_name = :full_name, birthday = :birthday, phone = :phone, weight = :weight, height = :height 
+                            WHERE user_id = :user_id";
+            $stmt = $pdo->prepare($updateQuery);
+            $stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
+            $stmt->bindParam(':birthday', $birthday, PDO::PARAM_STR);
+            $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
+            $stmt->bindParam(':weight', $weight, PDO::PARAM_INT);
+            $stmt->bindParam(':height', $height, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    
+            if ($stmt->execute()) {
+                jsonResponse('Success', 'User information updated successfully');
+            } else {
+                jsonResponse('Error', 'Failed to update user information');
+            }
+    
+        } catch (PDOException $e) {
+            jsonResponse('Error', 'Database error: ' . $e->getMessage());
+        }
       
     }
 

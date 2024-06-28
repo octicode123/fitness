@@ -1,3 +1,7 @@
+<?php require_once "./controller/security.php";
+if(isset($_GET["id"]) && !empty($_GET["id"])){
+  $coach_id=htmlspecialchars($_GET["id"]);
+?>
 <!DOCTYPE html>
 
 
@@ -57,157 +61,102 @@
 
         <div class="container-fluid flex-grow-1 container-p-y">
           <!-- Layout Demo -->
-           <div class="row">
-       
-
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-success"> Monday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">View Program</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-primary"> Tuesday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">Copy task link</a><a class="dropdown-item" href="javascript:void(0)">Duplicate task</a><a class="dropdown-item delete-task" href="javascript:void(0)">Delete</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-info"> Wednesday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">Copy task link</a><a class="dropdown-item" href="javascript:void(0)">Duplicate task</a><a class="dropdown-item delete-task" href="javascript:void(0)">Delete</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-warning"> Thursday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">Copy task link</a><a class="dropdown-item" href="javascript:void(0)">Duplicate task</a><a class="dropdown-item delete-task" href="javascript:void(0)">Delete</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-danger"> Friday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">Copy task link</a><a class="dropdown-item" href="javascript:void(0)">Duplicate task</a><a class="dropdown-item delete-task" href="javascript:void(0)">Delete</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-dark"> Saturday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">Copy task link</a><a class="dropdown-item" href="javascript:void(0)">Duplicate task</a><a class="dropdown-item delete-task" href="javascript:void(0)">Delete</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-
-            <div class="col-lg-3 col-6 mb-3">
-            <div class="card">
-            <div class="body">
-              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
-                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
-                  <div class="item-badges">
-                    <div class="badge rounded-pill bg-label-success"> Sunday</div>
-                  </div>
-                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="javascript:void(0)">Copy task link</a><a class="dropdown-item" href="javascript:void(0)">Duplicate task</a><a class="dropdown-item delete-task" href="javascript:void(0)">Delete</a></div>
-                  </div>
-                </div><span class="kanban-text">Push day</span>
-                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
-                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class="bx bx-paperclip me-1"></i><span class="attachments">4</span></span> <span class="d-flex align-items-center"><i class="bx bx-chat me-1"></i><span> 12 </span></span></div>
-                 
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-            
-           </div>
          
+     
+                  <div class="row">
+
+                    <?php
+                    $program = $pdo->prepare("SELECT * FROM training_program WHERE coach_id=:coach_id and user_id=:user_id");
+                    $program->bindParam(':coach_id', $coach_id);
+                    $program->bindParam(':user_id', $user_id);
+                    $program->execute();
+                    $result_program = $program->fetchAll();
+                    if (count($result_program) > 0) {
+
+                      $classMap = [
+                        'Monday' => 'bg-label-success',
+                        'Tuesday' => 'bg-label-info',
+                        'Wednesday' => 'bg-label-primary',
+                        'Thursday' => 'bg-label-warning',
+                        'Friday' => 'bg-label-danger',
+                        'Saturday' => 'bg-label-secondary',
+                        'Sunday' => 'bg-label-dark',
+                      ];
+
+                      $defaultClass = 'bg-label-secondary';
+
+                      foreach ($result_program as $row) {
+                        $dayOfWeek = ucfirst($row["day_of_week"]);
+
+                        $class = isset($classMap[$dayOfWeek]) ? $classMap[$dayOfWeek] : $defaultClass;
+                    ?>
+                        <div class="col-lg-3 col-6 mb-3">
+                          <div class="card">
+                            <div class="body">
+                              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
+                                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
+                                  <div class="item-badges">
+                                    <div class="badge rounded-pill <?php echo $class; ?>"><?php echo $dayOfWeek; ?></div>
+
+                                  </div>
+                                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="program.php?id=<?php echo $row["id_training"]; ?>" target="_blank">View Program</a></div>
+                                  </div>
+                                </div><span class="kanban-text"><?php echo $row["title"]; ?></span>
+                                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
+                                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class='bx bx-food-menu'></i>
+                                      <span class="attachments"></span></span>
+                                    <span class="d-flex align-items-center"><i class='bx bx-run'></i> </span></span>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    <?php
+                      }
+                    } else {
+                      echo "<h3 class='text-danger text-center'>you don't have any program yet</h3>";
+                    }
+                    ?>
+
+
+
+
+
+
+                  
+              </div>
+              <div class="card">
+                <div class="card-header h3"> Weight track
+
+                </div>
+                <div class="card-body">
+<form id="add_weight" method="POST">
+
+                  <div class="row">
+                    <div class="col-lg-4 col-12">
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Weight</label>
+                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                      </div>
+                    </div>
+                    <div class="col-lg-8 col-12">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Default file input example</label>
+                        <input class="form-control" type="file" id="formFile">
+                      </div>
+                      </div>
+                      <div class="text-center">
+                      <button class="btn btn-success w-50 text-center">Add Weight</button>
+
+                      </div>
+                  </div>
+                  </form>
+
+                </div>
+              </div>
 
 
           <!--/ Basic Bootstrap Table -->
@@ -255,3 +204,9 @@
 </body>
 
 </html>
+<?php
+}else{
+  header('location :index.php');
+}
+?>
+

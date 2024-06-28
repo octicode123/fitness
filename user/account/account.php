@@ -1,3 +1,4 @@
+<?php require_once "./controller/security.php"; ?>
 <!DOCTYPE html>
 
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
@@ -71,32 +72,38 @@
 
                 <hr class="my-0" />
                 <div class="card-body">
-                  <form id="formAccountSettings" method="POST" onsubmit="return false">
+                  <form id="update" method="POST" onsubmit="return false">
                     <div class="row">
+                      <?php
+                      $info=$pdo->prepare("SELECT * FROM user_info WHERE user_id=:user_id LIMIT 1");
+                      $info->bindParam(':user_id',$user_id);
+                      $info->execute();
+                      $infoResult=$info->fetch();
+                      ?>
                       <div class="mb-3 col-md-6">
                         <label for="firstName" class="form-label">Full Name</label>
-                        <input class="form-control" type="text" id="fullname" name="firstName" value="John" autofocus />
+                        <input class="form-control" type="text" id="fullname" name="firstName" value="<?php echo $infoResult["full_name"]; ?>" autofocus />
                       </div>
                       <div class="mb-3 col-md-6">
                         <label for="lastName" class="form-label">Phone No</label>
-                        <input class="form-control" type="text" name="phone" id="lastName" value="Doe" />
+                        <input class="form-control" type="text" name="phone" id="lastName" value="<?php echo $infoResult["phone"]; ?>" />
                       </div>
                       <div class="col-md-6">
                         <div class="mb-3">
                           <label for="defaultSelect" class="form-label">birthday</label>
-                          <input class="form-control" type="date" name="birthday" value="2021-06-18" id="html5-date-input">
+                          <input class="form-control" type="date" name="birthday" value="<?php echo $infoResult["birthday"]; ?>" id="html5-date-input">
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="mb-3">
                           <label for="email" class="form-label">height (in cm)</label>
-                          <input type="text" class="form-control" id="email" name="height" placeholder="180" />
+                          <input type="text" class="form-control" id="email" value="<?php echo $infoResult["height"]; ?>" name="height" placeholder="180" />
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="mb-3">
                           <label for="email" class="form-label">Weight (in kg)</label>
-                          <input type="text" class="form-control" id="email" name="weight" placeholder="80" />
+                          <input type="text" class="form-control" id="email" name="weight" value="<?php echo $infoResult["weight"]; ?>" placeholder="80" />
                         </div>
                       </div>
 
@@ -148,6 +155,7 @@
 
   <!-- Main JS -->
   <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/sweet.js"></script>
 
   <!-- Page JS -->
   <script src="../assets/js/pages-account-settings-account.js"></script>
@@ -158,7 +166,7 @@
 
 </html>
 <script>
-   profile_img()
+  profile_img()
 
 function profile_img() {
   var formData = new FormData();
@@ -177,12 +185,67 @@ function profile_img() {
     .then(message => {
       document.getElementById('picture').innerHTML = message;
 
-      //var UpIm = document.getElementById("UpIm");
-      //UpIm.addEventListener('submit', handleImageUpload);
+      var UpIm = document.getElementById("UpIm");
+      UpIm.addEventListener('submit', handleImageUpload);
     })
     .catch(error => {
       console.error('Error:', error);
       swal("Error", "An error occurred while processing your request", "error");
     });
-    }
+
+  function handleImageUpload(event) {
+    event.preventDefault();
+    swal("ok");
+
+    var formData = new FormData(UpIm);
+    formData.append('ero', 'img_u');
+
+    fetch('controller/account-settings.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(message => {
+        swal(message);
+        profile_img();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        swal("Error", "An error occurred while uploading the image", "error");
+      });
+  }
+}
+
+var update = document.getElementById('update');
+update.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    var formData = new FormData(update);
+    formData.append('ero', 'update_account');
+
+    fetch('controller/account-settings.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+
+    
+        if (data.status === 'Success') {
+            swal("Good Job", data.message, "success");
+            
+        } else if (data.status === 'Error') {
+            swal("Opps!", data.message, "warning");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+});
 </script>
