@@ -1,6 +1,8 @@
 <?php require_once "./controller/security.php";
-if(isset($_GET["id"]) && !empty($_GET["id"])){
+if(isset($_GET["id"]) && !empty($_GET["id"]) && isset($_GET["id_subscription"])){
   $coach_id=htmlspecialchars($_GET["id"]);
+  $id_subscription=htmlspecialchars($_GET["id_subscription"]);
+
 ?>
 <!DOCTYPE html>
 
@@ -90,7 +92,7 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
 
                         $class = isset($classMap[$dayOfWeek]) ? $classMap[$dayOfWeek] : $defaultClass;
                     ?>
-                        <div class="col-lg-3 col-6 mb-3">
+                        <div class="col-lg-3 col-12 mb-3">
                           <div class="card">
                             <div class="body">
                               <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
@@ -133,23 +135,26 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
 
                 </div>
                 <div class="card-body">
-<form id="add_weight" method="POST">
+
+            <form id="add_weight" method="POST" enctype="multipart/form-data">
 
                   <div class="row">
                     <div class="col-lg-4 col-12">
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Weight</label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                        <input type="text" class="form-control" name="weight" id="exampleFormControlInput1" >
                       </div>
                     </div>
                     <div class="col-lg-8 col-12">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Default file input example</label>
-                        <input class="form-control" type="file" id="formFile">
+                        <input class="form-control" type="file" id="upload"  accept="image/png, image/jpeg ,image/jpg" name="photos">
+                    </div>
                       </div>
-                      </div>
+                      <input type="hidden" name="id_subscription" value="<?php echo $id_subscription; ?>"  >
+
                       <div class="text-center">
-                      <button class="btn btn-success w-50 text-center">Add Weight</button>
+                      <button class="btn btn-success w-50 text-center" type="submit">Add Weight</button>
 
                       </div>
                   </div>
@@ -157,6 +162,78 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
 
                 </div>
               </div>
+
+              <div class="card mt-3">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                      <h5 class="card-title m-0 me-2">Weight History</h5>
+                      <div class="dropdown">
+                        <button class="btn p-0" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="bx bx-dots-vertical-rounded"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
+                          <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
+                          <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <ul class="p-0 m-0">
+                        <?php
+                        $track = $pdo->prepare("SELECT * FROM weight_track WHERE id_subscription=:id_subscription and user_id=:user_id");
+                        $track->bindParam(':id_subscription', $id_subscription);
+                        $track->bindParam(':user_id', $user_id);
+                        $track->execute();
+                        $result_track = $track->fetchAll();
+                        if (count($result_track) > 0) {
+                          foreach ($result_track as $track) {
+                        ?>
+                            <li class="d-flex mb-4 pb-1">
+                              <div class="avatar flex-shrink-0 me-3">
+                                <i class='bx bx-plus h3'></i>
+                              </div>
+                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                  <small class="text-muted d-block mb-1"><?php echo $track["track_date"]; ?></small>
+                                  <h6 class="mb-0"><i class='bx bxs-show' onclick="img('<?php echo $track['img']; ?>')" data-bs-toggle="modal" data-bs-target="#modalCenter"></i> body picture</h6>
+                                  <div class="modal fade" id="modalCenter" tabindex="-1" style="display: none;" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="modalCenterTitle">picture</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <img id="modalImage" src="" alt="Image" class="img-fluid">
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            Close
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                  <h6 class="mb-0"><?php echo $track["weight"]; ?></h6>
+                                  <span class="text-muted">KG</span>
+                                </div>
+                              </div>
+                            </li>
+                        <?php
+                          }
+                        } else {
+                          echo "No added data by client";
+                        }
+
+                        ?>
+
+
+
+                      </ul>
+                    </div>
+                  </div>
 
 
           <!--/ Basic Bootstrap Table -->
@@ -196,6 +273,7 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
 
   <!-- Main JS -->
   <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/sweet.js"></script>
 
   <!-- Page JS -->
 
@@ -204,6 +282,41 @@ if(isset($_GET["id"]) && !empty($_GET["id"])){
 </body>
 
 </html>
+<script>
+        var add_weight = document.getElementById("add_weight");
+        add_weight.addEventListener('submit', handleImageUpload);
+
+
+
+        function handleImageUpload(event) {
+    event.preventDefault();
+
+    var formData = new FormData(add_weight);
+    formData.append('ero', 'weight_track');
+
+    fetch('controller/account-settings.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
+      .then(message => {
+        swal(message);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        swal("Error", "An error occurred while uploading the image", "error");
+      });
+  }
+  function img(imageUrl) {
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = "../../../fitness_img/user/" + imageUrl;
+      }
+</script>
 <?php
 }else{
   header('location :index.php');

@@ -118,7 +118,7 @@
                             <a class="app-academy-md-50 btn btn-label-secondary me-md-2 d-flex align-items-center" onclick="cancell()">
                               <i class="bx bx-sync align-middle me-2 "></i><span>Cancel</span>
                             </a>
-                            <a class=" btn btn-label-primary d-flex align-items-center" href="coach-program.php?id=<?php echo $row["coach_id"]; ?>">
+                            <a class=" btn btn-label-primary d-flex align-items-center" href="coach-program.php?id=<?php echo $row["coach_id"]; ?>&id_subscription=<?php echo $row["id_subscription"]; ?>">
                               <span class="me-2">Continue</span><i class="bx bx-chevron-right lh-1 scaleX-n1-rtl"></i>
                             </a>
                           </div>

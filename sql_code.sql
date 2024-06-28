@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 28, 2024 at 04:34 PM
+-- Generation Time: Jun 28, 2024 at 07:48 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.2.4
 
@@ -75,6 +75,7 @@ INSERT INTO `coach_price` (`id_price`, `coach_id`, `price`, `update_date`) VALUE
 --
 
 CREATE TABLE `exercice_training_program` (
+  `id_ex_tr` int(11) NOT NULL,
   `id_training` int(11) NOT NULL,
   `id_exercice` int(11) NOT NULL,
   `sets` int(11) NOT NULL CHECK (`sets` > 0),
@@ -85,13 +86,9 @@ CREATE TABLE `exercice_training_program` (
 -- Dumping data for table `exercice_training_program`
 --
 
-INSERT INTO `exercice_training_program` (`id_training`, `id_exercice`, `sets`, `reps`) VALUES
-(11, 1, 4, 12),
-(11, 2, 4, 12),
-(12, 1, 4, 12),
-(12, 2, 4, 12),
-(14, 1, 3, 3),
-(15, 1, 3, 3);
+INSERT INTO `exercice_training_program` (`id_ex_tr`, `id_training`, `id_exercice`, `sets`, `reps`) VALUES
+(7, 16, 1, 4, 13),
+(8, 16, 2, 5, 8);
 
 -- --------------------------------------------------------
 
@@ -133,10 +130,8 @@ CREATE TABLE `nutrition` (
 --
 
 INSERT INTO `nutrition` (`id_nutrition`, `coach_id`, `created_at`) VALUES
-(10, 1, '2024-06-28 11:57:49'),
-(11, 1, '2024-06-28 11:57:49'),
-(12, 1, '2024-06-28 12:10:13'),
-(13, 1, '2024-06-28 12:11:04');
+(14, 1, '2024-06-28 16:54:01'),
+(15, 1, '2024-06-28 16:54:01');
 
 -- --------------------------------------------------------
 
@@ -157,12 +152,9 @@ CREATE TABLE `nutrition_food` (
 --
 
 INSERT INTO `nutrition_food` (`id_food`, `id_nutrition`, `food_name`, `weight`, `kcal`) VALUES
-(9, 10, 'potatos', '100', '300'),
-(10, 10, 'bread', '100', '300'),
-(11, 11, 'oats', '100', '375'),
-(12, 11, 'chicken', '200', '120'),
-(13, 12, 'potatos', '2', '2'),
-(14, 13, 'potatos', '2', '2');
+(15, 14, 'potatos', '300', '300'),
+(16, 14, 'apple', '100', '50'),
+(17, 15, 'chicken', '200', '230');
 
 -- --------------------------------------------------------
 
@@ -181,8 +173,8 @@ CREATE TABLE `nutrition_training_program` (
 --
 
 INSERT INTO `nutrition_training_program` (`id_train_prog`, `id_training`, `id_nutrition`) VALUES
-(8, 14, 12),
-(9, 15, 13);
+(10, 16, 14),
+(11, 16, 15);
 
 -- --------------------------------------------------------
 
@@ -227,10 +219,7 @@ CREATE TABLE `training_program` (
 --
 
 INSERT INTO `training_program` (`id_training`, `coach_id`, `user_id`, `title`, `day_of_week`, `created_at`, `duration`) VALUES
-(11, 1, 5, 'push', 'Monday', '2024-06-28 11:52:29', 60),
-(12, 1, 5, 'push', 'Monday', '2024-06-28 11:54:51', 60),
-(14, 1, 5, 'push-pull-leg', 'Tuesday', '2024-06-28 12:10:13', 60),
-(15, 1, 5, 'leg', 'Wednesday', '2024-06-28 12:11:04', 60);
+(16, 1, 5, 'push', 'Monday', '2024-06-28 16:54:01', 60);
 
 --
 -- Triggers `training_program`
@@ -290,7 +279,7 @@ CREATE TABLE `user_info` (
 --
 
 INSERT INTO `user_info` (`info_id`, `user_id`, `full_name`, `birthday`, `phone`, `weight`, `height`, `registration_date`, `picture`) VALUES
-(1, 5, 'Alan doe', '2002-02-14', '0754656765', '90', '185', '2024-06-27 13:56:00', NULL),
+(1, 5, 'Alan doe', '2002-02-14', '0754656765', '90', '185', '2024-06-27 13:56:00', '538889667ecc34b52d8.png'),
 (2, 7, 'LANA JEAN', '2002-02-18', '0764535465', '100', '190', '2024-06-28 13:51:52', NULL),
 (3, 8, 'SEAT LEON', '2002-02-18', '0764535465', '70', '170', '2024-06-28 13:54:45', NULL);
 
@@ -315,7 +304,8 @@ CREATE TABLE `weight_track` (
 
 INSERT INTO `weight_track` (`id_track`, `user_id`, `weight`, `img`, `track_date`, `id_subscription`) VALUES
 (1, 5, '89', 'tr.jpg', '2024-06-27 20:17:04', 1),
-(2, 5, '89', 'tr1.jpg', '2024-07-06 20:17:04', 1);
+(2, 5, '89', 'tr1.jpg', '2024-07-06 20:17:04', 1),
+(3, 5, '100', '267282667ef3fbc6b0a.png', '2024-06-28 19:33:47', 1);
 
 --
 -- Indexes for dumped tables
@@ -339,6 +329,7 @@ ALTER TABLE `coach_price`
 -- Indexes for table `exercice_training_program`
 --
 ALTER TABLE `exercice_training_program`
+  ADD PRIMARY KEY (`id_ex_tr`),
   ADD KEY `id_training` (`id_training`),
   ADD KEY `id_exercice` (`id_exercice`);
 
@@ -426,6 +417,12 @@ ALTER TABLE `coach_price`
   MODIFY `id_price` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `exercice_training_program`
+--
+ALTER TABLE `exercice_training_program`
+  MODIFY `id_ex_tr` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `exercises`
 --
 ALTER TABLE `exercises`
@@ -435,19 +432,19 @@ ALTER TABLE `exercises`
 -- AUTO_INCREMENT for table `nutrition`
 --
 ALTER TABLE `nutrition`
-  MODIFY `id_nutrition` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_nutrition` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `nutrition_food`
 --
 ALTER TABLE `nutrition_food`
-  MODIFY `id_food` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_food` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `nutrition_training_program`
 --
 ALTER TABLE `nutrition_training_program`
-  MODIFY `id_train_prog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_train_prog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `subscription`
@@ -459,7 +456,7 @@ ALTER TABLE `subscription`
 -- AUTO_INCREMENT for table `training_program`
 --
 ALTER TABLE `training_program`
-  MODIFY `id_training` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_training` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -477,7 +474,7 @@ ALTER TABLE `user_info`
 -- AUTO_INCREMENT for table `weight_track`
 --
 ALTER TABLE `weight_track`
-  MODIFY `id_track` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_track` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
