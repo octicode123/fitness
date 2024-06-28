@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 27, 2024 at 07:51 PM
+-- Generation Time: Jun 28, 2024 at 04:34 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.2.4
 
@@ -81,6 +81,18 @@ CREATE TABLE `exercice_training_program` (
   `reps` int(11) NOT NULL CHECK (`reps` > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `exercice_training_program`
+--
+
+INSERT INTO `exercice_training_program` (`id_training`, `id_exercice`, `sets`, `reps`) VALUES
+(11, 1, 4, 12),
+(11, 2, 4, 12),
+(12, 1, 4, 12),
+(12, 2, 4, 12),
+(14, 1, 3, 3),
+(15, 1, 3, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -96,6 +108,14 @@ CREATE TABLE `exercises` (
   `yt_video` varchar(100) NOT NULL CHECK (char_length(`yt_video`) < 255)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `exercises`
+--
+
+INSERT INTO `exercises` (`id_exercise`, `coach_id`, `title`, `description`, `target_muscle`, `yt_video`) VALUES
+(1, 1, 'chest', 'this is an exercice make sure that you are in a good postion', 'upper chest', 'https://www.youtube.com/shorts/oRkrwIrAleI'),
+(2, 1, 'Traps exercice', 'this is an exercice make sure that you are in a good postion', 'traps', 'https://www.youtube.com/watch?v=IcSZ1bsk0XE');
+
 -- --------------------------------------------------------
 
 --
@@ -108,6 +128,16 @@ CREATE TABLE `nutrition` (
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `nutrition`
+--
+
+INSERT INTO `nutrition` (`id_nutrition`, `coach_id`, `created_at`) VALUES
+(10, 1, '2024-06-28 11:57:49'),
+(11, 1, '2024-06-28 11:57:49'),
+(12, 1, '2024-06-28 12:10:13'),
+(13, 1, '2024-06-28 12:11:04');
+
 -- --------------------------------------------------------
 
 --
@@ -115,12 +145,24 @@ CREATE TABLE `nutrition` (
 --
 
 CREATE TABLE `nutrition_food` (
-  `id_food` int(11) NOT NULL CHECK (`id_food` > 0),
+  `id_food` int(11) NOT NULL,
   `id_nutrition` int(11) NOT NULL,
   `food_name` varchar(255) NOT NULL CHECK (octet_length(`food_name`) < 255),
   `weight` decimal(10,0) NOT NULL CHECK (`weight` >= 0),
   `kcal` decimal(10,0) NOT NULL CHECK (`kcal` >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `nutrition_food`
+--
+
+INSERT INTO `nutrition_food` (`id_food`, `id_nutrition`, `food_name`, `weight`, `kcal`) VALUES
+(9, 10, 'potatos', '100', '300'),
+(10, 10, 'bread', '100', '300'),
+(11, 11, 'oats', '100', '375'),
+(12, 11, 'chicken', '200', '120'),
+(13, 12, 'potatos', '2', '2'),
+(14, 13, 'potatos', '2', '2');
 
 -- --------------------------------------------------------
 
@@ -129,9 +171,18 @@ CREATE TABLE `nutrition_food` (
 --
 
 CREATE TABLE `nutrition_training_program` (
+  `id_train_prog` int(11) NOT NULL,
   `id_training` int(11) NOT NULL,
   `id_nutrition` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `nutrition_training_program`
+--
+
+INSERT INTO `nutrition_training_program` (`id_train_prog`, `id_training`, `id_nutrition`) VALUES
+(8, 14, 12),
+(9, 15, 13);
 
 -- --------------------------------------------------------
 
@@ -153,7 +204,7 @@ CREATE TABLE `subscription` (
 --
 
 INSERT INTO `subscription` (`id_subscription`, `user_id`, `coach_id`, `status`, `sub_date`, `price`) VALUES
-(1, 5, 1, 'pending', '2024-06-27 12:57:30', '1000.00');
+(1, 5, 1, 'accepted', '2024-06-27 12:57:30', '1000.00');
 
 -- --------------------------------------------------------
 
@@ -164,10 +215,22 @@ INSERT INTO `subscription` (`id_subscription`, `user_id`, `coach_id`, `status`, 
 CREATE TABLE `training_program` (
   `id_training` int(11) NOT NULL,
   `coach_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL CHECK (octet_length(`title`) > 0),
+  `day_of_week` varchar(20) NOT NULL,
   `created_at` datetime NOT NULL,
-  `duration` time NOT NULL CHECK (`duration` > '00:00:00')
+  `duration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `training_program`
+--
+
+INSERT INTO `training_program` (`id_training`, `coach_id`, `user_id`, `title`, `day_of_week`, `created_at`, `duration`) VALUES
+(11, 1, 5, 'push', 'Monday', '2024-06-28 11:52:29', 60),
+(12, 1, 5, 'push', 'Monday', '2024-06-28 11:54:51', 60),
+(14, 1, 5, 'push-pull-leg', 'Tuesday', '2024-06-28 12:10:13', 60),
+(15, 1, 5, 'leg', 'Wednesday', '2024-06-28 12:11:04', 60);
 
 --
 -- Triggers `training_program`
@@ -200,7 +263,9 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `email`, `password`, `type`) VALUES
 (1, 'aitbellaamine11@gmail.com', '$2y$10$gmdFeB43UChPGyGh9EsPMOW2o9YF5c4Q914Os6rEhoy/DDJqniTV2', 'coach'),
-(5, 'aitbellaamine111@gmail.com', '$2y$10$gmdFeB43UChPGyGh9EsPMOW2o9YF5c4Q914Os6rEhoy/DDJqniTV2', 'user');
+(5, 'aitbellaamine111@gmail.com', '$2y$10$gmdFeB43UChPGyGh9EsPMOW2o9YF5c4Q914Os6rEhoy/DDJqniTV2', 'user'),
+(7, 'aitbellaamine@gmail.com', '$2y$10$v/enRntkkJ8Ct5zYkr5rpuSYcWOIis4z7bt3hlYK23e1wMQ5SCl1q', 'user'),
+(8, 'aitbellaamineKO@gmail.com', '$2y$10$4Qx73Bwf1Sdic9JSA9yGAug4cg5p1sswupEo0BdmeW2C74ToC1iQC', 'user');
 
 -- --------------------------------------------------------
 
@@ -225,7 +290,9 @@ CREATE TABLE `user_info` (
 --
 
 INSERT INTO `user_info` (`info_id`, `user_id`, `full_name`, `birthday`, `phone`, `weight`, `height`, `registration_date`, `picture`) VALUES
-(1, 5, 'Alan doe', '2002-02-14', '0754656765', '90', '185', '2024-06-27 13:56:00', NULL);
+(1, 5, 'Alan doe', '2002-02-14', '0754656765', '90', '185', '2024-06-27 13:56:00', NULL),
+(2, 7, 'LANA JEAN', '2002-02-18', '0764535465', '100', '190', '2024-06-28 13:51:52', NULL),
+(3, 8, 'SEAT LEON', '2002-02-18', '0764535465', '70', '170', '2024-06-28 13:54:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -241,6 +308,14 @@ CREATE TABLE `weight_track` (
   `track_date` datetime NOT NULL,
   `id_subscription` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `weight_track`
+--
+
+INSERT INTO `weight_track` (`id_track`, `user_id`, `weight`, `img`, `track_date`, `id_subscription`) VALUES
+(1, 5, '89', 'tr.jpg', '2024-06-27 20:17:04', 1),
+(2, 5, '89', 'tr1.jpg', '2024-07-06 20:17:04', 1);
 
 --
 -- Indexes for dumped tables
@@ -292,6 +367,7 @@ ALTER TABLE `nutrition_food`
 -- Indexes for table `nutrition_training_program`
 --
 ALTER TABLE `nutrition_training_program`
+  ADD PRIMARY KEY (`id_train_prog`),
   ADD KEY `id_training` (`id_training`),
   ADD KEY `id_nutrition` (`id_nutrition`);
 
@@ -308,7 +384,8 @@ ALTER TABLE `subscription`
 --
 ALTER TABLE `training_program`
   ADD PRIMARY KEY (`id_training`),
-  ADD KEY `coach_id` (`coach_id`);
+  ADD KEY `coach_id` (`coach_id`),
+  ADD KEY `fk_user_prog_training` (`user_id`);
 
 --
 -- Indexes for table `user`
@@ -352,13 +429,25 @@ ALTER TABLE `coach_price`
 -- AUTO_INCREMENT for table `exercises`
 --
 ALTER TABLE `exercises`
-  MODIFY `id_exercise` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_exercise` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `nutrition`
 --
 ALTER TABLE `nutrition`
-  MODIFY `id_nutrition` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_nutrition` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `nutrition_food`
+--
+ALTER TABLE `nutrition_food`
+  MODIFY `id_food` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `nutrition_training_program`
+--
+ALTER TABLE `nutrition_training_program`
+  MODIFY `id_train_prog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `subscription`
@@ -370,25 +459,25 @@ ALTER TABLE `subscription`
 -- AUTO_INCREMENT for table `training_program`
 --
 ALTER TABLE `training_program`
-  MODIFY `id_training` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_training` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user_info`
 --
 ALTER TABLE `user_info`
-  MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `weight_track`
 --
 ALTER TABLE `weight_track`
-  MODIFY `id_track` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_track` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -449,6 +538,7 @@ ALTER TABLE `subscription`
 -- Constraints for table `training_program`
 --
 ALTER TABLE `training_program`
+  ADD CONSTRAINT `fk_user_prog_training` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
   ADD CONSTRAINT `training_program_ibfk_1` FOREIGN KEY (`coach_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 
 --
