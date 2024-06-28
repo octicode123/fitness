@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 27, 2024 at 11:23 AM
+-- Generation Time: Jun 27, 2024 at 07:51 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.2.4
 
@@ -37,8 +37,36 @@ CREATE TABLE `coach_account` (
   `city` varchar(20) NOT NULL CHECK (octet_length(`city`) > 0),
   `state` varchar(20) NOT NULL CHECK (octet_length(`state`) > 0),
   `zipcode` varchar(20) NOT NULL CHECK (octet_length(`zipcode`) > 0 and octet_length(`zipcode`) <= 10),
-  `country` varchar(20) NOT NULL CHECK (octet_length(`country`) > 0)
+  `country` varchar(20) NOT NULL CHECK (octet_length(`country`) > 0),
+  `picture` varchar(50) DEFAULT NULL CHECK (octet_length(`picture`) < 50)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `coach_account`
+--
+
+INSERT INTO `coach_account` (`coach_id`, `user_id`, `full_name`, `about_me`, `phone`, `domain`, `city`, `state`, `zipcode`, `country`, `picture`) VALUES
+(1, 1, 'Amine Ait Bella', 'Hello my name is amine ', '0772525374', 'Bodybuilding', 'Agadir', 'souss', '83350', 'Morocco', '634425667d4c72a4538.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coach_price`
+--
+
+CREATE TABLE `coach_price` (
+  `id_price` int(11) NOT NULL,
+  `coach_id` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `update_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `coach_price`
+--
+
+INSERT INTO `coach_price` (`id_price`, `coach_id`, `price`, `update_date`) VALUES
+(1, 1, '1000.00', '2024-06-27 13:57:03');
 
 -- --------------------------------------------------------
 
@@ -115,9 +143,17 @@ CREATE TABLE `subscription` (
   `id_subscription` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `coach_id` int(11) DEFAULT NULL,
-  `status` enum('pending','accepted','cancelled') DEFAULT NULL,
-  `sub_date` datetime DEFAULT NULL
+  `status` enum('pending','accepted','cancelled','end') DEFAULT NULL,
+  `sub_date` datetime DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `subscription`
+--
+
+INSERT INTO `subscription` (`id_subscription`, `user_id`, `coach_id`, `status`, `sub_date`, `price`) VALUES
+(1, 5, 1, 'pending', '2024-06-27 12:57:30', '1000.00');
 
 -- --------------------------------------------------------
 
@@ -158,6 +194,14 @@ CREATE TABLE `user` (
   `type` enum('coach','admin','user') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `email`, `password`, `type`) VALUES
+(1, 'aitbellaamine11@gmail.com', '$2y$10$gmdFeB43UChPGyGh9EsPMOW2o9YF5c4Q914Os6rEhoy/DDJqniTV2', 'coach'),
+(5, 'aitbellaamine111@gmail.com', '$2y$10$gmdFeB43UChPGyGh9EsPMOW2o9YF5c4Q914Os6rEhoy/DDJqniTV2', 'user');
+
 -- --------------------------------------------------------
 
 --
@@ -172,20 +216,16 @@ CREATE TABLE `user_info` (
   `phone` varchar(13) NOT NULL CHECK (octet_length(`phone`) >= 10 and octet_length(`phone`) <= 13),
   `weight` decimal(10,0) NOT NULL CHECK (`weight` > 0),
   `height` decimal(10,0) NOT NULL CHECK (`height` > 0),
-  `registration_date` datetime NOT NULL
+  `registration_date` datetime NOT NULL,
+  `picture` varchar(100) DEFAULT NULL CHECK (octet_length(`picture`) < 100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Triggers `user_info`
+-- Dumping data for table `user_info`
 --
-DELIMITER $$
-CREATE TRIGGER `before_insert_user_info` BEFORE INSERT ON `user_info` FOR EACH ROW BEGIN
-    IF NEW.registration_date > NOW() THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Registration date cannot be in the future';
-    END IF;
-END
-$$
-DELIMITER ;
+
+INSERT INTO `user_info` (`info_id`, `user_id`, `full_name`, `birthday`, `phone`, `weight`, `height`, `registration_date`, `picture`) VALUES
+(1, 5, 'Alan doe', '2002-02-14', '0754656765', '90', '185', '2024-06-27 13:56:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -198,7 +238,8 @@ CREATE TABLE `weight_track` (
   `user_id` int(11) DEFAULT NULL,
   `weight` decimal(10,0) NOT NULL CHECK (`weight` > 0),
   `img` varchar(255) DEFAULT NULL CHECK (char_length(`img`) <= 255),
-  `track_date` datetime NOT NULL
+  `track_date` datetime NOT NULL,
+  `id_subscription` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -213,6 +254,13 @@ ALTER TABLE `coach_account`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `coach_price`
+--
+ALTER TABLE `coach_price`
+  ADD PRIMARY KEY (`id_price`),
+  ADD KEY `fk_coach_price_coach_id` (`coach_id`);
+
+--
 -- Indexes for table `exercice_training_program`
 --
 ALTER TABLE `exercice_training_program`
@@ -223,7 +271,8 @@ ALTER TABLE `exercice_training_program`
 -- Indexes for table `exercises`
 --
 ALTER TABLE `exercises`
-  ADD PRIMARY KEY (`id_exercise`);
+  ADD PRIMARY KEY (`id_exercise`),
+  ADD KEY `fk_ex_coach` (`coach_id`);
 
 --
 -- Indexes for table `nutrition`
@@ -250,7 +299,9 @@ ALTER TABLE `nutrition_training_program`
 -- Indexes for table `subscription`
 --
 ALTER TABLE `subscription`
-  ADD PRIMARY KEY (`id_subscription`);
+  ADD PRIMARY KEY (`id_subscription`),
+  ADD KEY `fk_sub_user` (`user_id`),
+  ADD KEY `fk_sub_coach` (`coach_id`);
 
 --
 -- Indexes for table `training_program`
@@ -277,7 +328,9 @@ ALTER TABLE `user_info`
 -- Indexes for table `weight_track`
 --
 ALTER TABLE `weight_track`
-  ADD PRIMARY KEY (`id_track`);
+  ADD PRIMARY KEY (`id_track`),
+  ADD KEY `fk_weight_user` (`user_id`),
+  ADD KEY `fk_weight_sub` (`id_subscription`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -287,7 +340,13 @@ ALTER TABLE `weight_track`
 -- AUTO_INCREMENT for table `coach_account`
 --
 ALTER TABLE `coach_account`
-  MODIFY `coach_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `coach_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `coach_price`
+--
+ALTER TABLE `coach_price`
+  MODIFY `id_price` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `exercises`
@@ -305,7 +364,7 @@ ALTER TABLE `nutrition`
 -- AUTO_INCREMENT for table `subscription`
 --
 ALTER TABLE `subscription`
-  MODIFY `id_subscription` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_subscription` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `training_program`
@@ -317,13 +376,13 @@ ALTER TABLE `training_program`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user_info`
 --
 ALTER TABLE `user_info`
-  MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `weight_track`
@@ -342,11 +401,23 @@ ALTER TABLE `coach_account`
   ADD CONSTRAINT `coach_account_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `coach_price`
+--
+ALTER TABLE `coach_price`
+  ADD CONSTRAINT `fk_coach_price_coach_id` FOREIGN KEY (`coach_id`) REFERENCES `coach_account` (`coach_id`);
+
+--
 -- Constraints for table `exercice_training_program`
 --
 ALTER TABLE `exercice_training_program`
   ADD CONSTRAINT `exercice_training_program_ibfk_1` FOREIGN KEY (`id_training`) REFERENCES `training_program` (`id_training`) ON DELETE CASCADE,
   ADD CONSTRAINT `exercice_training_program_ibfk_2` FOREIGN KEY (`id_exercice`) REFERENCES `exercises` (`id_exercise`);
+
+--
+-- Constraints for table `exercises`
+--
+ALTER TABLE `exercises`
+  ADD CONSTRAINT `fk_ex_coach` FOREIGN KEY (`coach_id`) REFERENCES `coach_account` (`coach_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `nutrition`
@@ -368,6 +439,13 @@ ALTER TABLE `nutrition_training_program`
   ADD CONSTRAINT `nutrition_training_program_ibfk_2` FOREIGN KEY (`id_nutrition`) REFERENCES `nutrition` (`id_nutrition`);
 
 --
+-- Constraints for table `subscription`
+--
+ALTER TABLE `subscription`
+  ADD CONSTRAINT `fk_sub_coach` FOREIGN KEY (`coach_id`) REFERENCES `coach_account` (`coach_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_sub_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `training_program`
 --
 ALTER TABLE `training_program`
@@ -378,26 +456,15 @@ ALTER TABLE `training_program`
 --
 ALTER TABLE `user_info`
   ADD CONSTRAINT `user_info_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `weight_track`
+--
+ALTER TABLE `weight_track`
+  ADD CONSTRAINT `fk_weight_sub` FOREIGN KEY (`id_subscription`) REFERENCES `subscription` (`id_subscription`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_weight_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
-
-
-ALTER TABLE subscription
-ADD CONSTRAINT fk_sub_user FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE;
-
-ALTER TABLE subscription
-ADD CONSTRAINT fk_sub_coach FOREIGN KEY (coach_id) REFERENCES coach_account(coach_id) ON DELETE CASCADE;
-
-ALTER TABLE weight_track
-ADD CONSTRAINT fk_weight_user FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE;
-
-ALTER TABLE weight_track
-ADD CONSTRAINT fk_weight_sub FOREIGN KEY (id_subscription) REFERENCES subscription(id_subscription) ON DELETE CASCADE;
-
-
-
-ALTER TABLE exercises
-ADD CONSTRAINT fk_ex_coach FOREIGN KEY (coach_id) REFERENCES coach_account(coach_id) ON DELETE CASCADE;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

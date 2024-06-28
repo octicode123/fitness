@@ -72,7 +72,7 @@
               </div>
               <!-- /Logo -->
               <h4 class="mb-4 text-primary">Cridentials Login </h4>
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+              <form id="createAcc" class="mb-3"  method="POST">
 
                <div class="row mb-3">
 
@@ -101,8 +101,7 @@
                   
                </div>
                 
-              </form>
-
+             
 
               
 
@@ -116,7 +115,6 @@
         
               <!-- /Logo -->
               <h4 class="mb-4 text-primary">Your informations</h4>
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
 
                <div class="row mb-3">
                 <div class="col-lg-4 col-12 col-md-6">
@@ -175,7 +173,7 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <button class="btn btn-primary w-50">Sign up</button>
+                  <button class="btn btn-primary w-50" type="submit">Sign up</button>
 
                 </div>
                </div>
@@ -216,6 +214,7 @@
 
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/sweet.js"></script>
 
     <!-- Page JS -->
 
@@ -223,3 +222,31 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
+<script>
+  var createAcc = document.getElementById('createAcc');
+createAcc.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    var formData = new FormData(createAcc);
+    formData.append('ero', 'create_account');
+
+    fetch('controller/create-account.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'Success') {
+            swal("Good Job", data.message, "success");
+            setTimeout(function() {
+                window.location.href = 'login.php';
+            }, 2000);
+        } else if (data.status === 'Error') {
+            swal("Opps!", data.message, "warning");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+</script>

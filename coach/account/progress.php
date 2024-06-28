@@ -103,8 +103,8 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
                           </div>
                         </div>
                       </div>
-                 <div id="details_customer"></div>
-               
+                      <div id="details_customer"></div>
+
                     </div>
                   </div>
                 </div>
@@ -125,36 +125,56 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
                     </div>
                     <div class="card-body">
                       <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <i class='bx bx-plus h3'></i>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <small class="text-muted d-block mb-1">27-06-2024</small>
-                              <h6 class="mb-0"><i class='bx bxs-show'></i> body picture</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-1">
-                              <h6 class="mb-0">82.6</h6>
-                              <span class="text-muted">KG</span>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <i class='bx bx-minus h3'></i>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <small class="text-muted d-block mb-1">05-07-2024</small>
-                              <h6 class="mb-0"><i class='bx bxs-show'></i> body picture</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-1">
-                              <h6 class="mb-0">80</h6>
-                              <span class="text-muted">KG</span>
-                            </div>
-                          </div>
-                        </li>
+                        <?php
+                        $track = $pdo->prepare("SELECT * FROM weight_track WHERE id_subscription=:id_subscription and user_id=:user_id");
+                        $track->bindParam(':id_subscription', $result_customer["id_subscription"]);
+                        $track->bindParam(':user_id', $id_customer);
+                        $track->execute();
+                        $result_track = $track->fetchAll();
+                        if (count($result_track) > 0) {
+                          foreach ($result_track as $track) {
+                        ?>
+                            <li class="d-flex mb-4 pb-1">
+                              <div class="avatar flex-shrink-0 me-3">
+                                <i class='bx bx-plus h3'></i>
+                              </div>
+                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                  <small class="text-muted d-block mb-1"><?php echo $track["track_date"]; ?></small>
+                                  <h6 class="mb-0"><i class='bx bxs-show' onclick="img('<?php echo $track['img']; ?>')" data-bs-toggle="modal" data-bs-target="#modalCenter"></i> body picture</h6>
+                                  <div class="modal fade" id="modalCenter" tabindex="-1" style="display: none;" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="modalCenterTitle">picture</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <img id="modalImage" src="" alt="Image" class="img-fluid">
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            Close
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                  <h6 class="mb-0"><?php echo $track["weight"]; ?></h6>
+                                  <span class="text-muted">KG</span>
+                                </div>
+                              </div>
+                            </li>
+                        <?php
+                          }
+                        } else {
+                          echo "No added data by client";
+                        }
+
+                        ?>
+
 
 
                       </ul>
@@ -163,7 +183,75 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
                 </div>
               </div>
 
+              <div class="card">
+                <div class="card-header h3 text-primary">Program</div>
+                <div class="card-body">
+                  <div class="row">
 
+                    <?php
+                    $program = $pdo->prepare("SELECT * FROM training_program WHERE coach_id=:coach_id and user_id=:user_id");
+                    $program->bindParam(':coach_id', $coach_id);
+                    $program->bindParam(':user_id', $id_customer);
+                    $program->execute();
+                    $result_program = $program->fetchAll();
+                    if (count($result_program) > 0) {
+
+                      $classMap = [
+                        'Monday' => 'bg-label-success',
+                        'Tuesday' => 'bg-label-info',
+                        'Wednesday' => 'bg-label-primary',
+                        'Thursday' => 'bg-label-warning',
+                        'Friday' => 'bg-label-danger',
+                        'Saturday' => 'bg-label-secondary',
+                        'Sunday' => 'bg-label-dark',
+                      ];
+
+                      $defaultClass = 'bg-label-secondary';
+
+                      foreach ($result_program as $row) {
+                        $dayOfWeek = ucfirst($row["day_of_week"]);
+
+                        $class = isset($classMap[$dayOfWeek]) ? $classMap[$dayOfWeek] : $defaultClass;
+                    ?>
+                        <div class="col-lg-3 col-6 mb-3">
+                          <div class="card">
+                            <div class="body">
+                              <div class="p-3" data-eid="in-progress-1" data-comments="12" data-badge-text="UX" data-badge="success" data-due-date="5 April" data-attachments="4" data-assigned="12.png,5.png" data-members="Bruce,Clark">
+                                <div class="d-flex justify-content-between flex-wrap align-items-center mb-2 pb-1">
+                                  <div class="item-badges">
+                                    <div class="badge rounded-pill <?php echo $class; ?>"><?php echo $dayOfWeek; ?></div>
+
+                                  </div>
+                                  <div class="dropdown kanban-tasks-item-dropdown"><i class="dropdown-toggle bx bx-dots-vertical-rounded" id="kanban-tasks-item-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="kanban-tasks-item-dropdown"><a class="dropdown-item" href="program-details.php?id=<?php echo $row["id_training"]; ?>" target="_blank">View Program</a></div>
+                                  </div>
+                                </div><span class="kanban-text"><?php echo $row["title"]; ?></span>
+                                <div class="d-flex justify-content-between align-items-center flex-wrap mt-2 pt-1">
+                                  <div class="d-flex"> <span class="d-flex align-items-center me-2"><i class='bx bx-food-menu'></i>
+                                      <span class="attachments"></span></span>
+                                    <span class="d-flex align-items-center"><i class='bx bx-run'></i> </span></span>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    <?php
+                      }
+                    } else {
+                      echo "<h3 class='text-danger text-center'>you didn't add any program fot this client</h3>";
+                    }
+                    ?>
+
+
+
+
+
+
+                  </div>
+                </div>
+              </div>
 
 
               <!--/ Layout Demo -->
@@ -202,6 +290,7 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
 
       <!-- Main JS -->
       <script src="../assets/js/main.js"></script>
+      <script src="../assets/js/sweet.js"></script>
 
       <!-- Page JS -->
 
@@ -211,35 +300,168 @@ if (isset($_GET["id"]) && !empty($_GET["id"])) {
 
     </html>
     <script>
-      var customer_id='<?php echo $id_customer; ?>';
-        customers(customer_id)
-    function customers(customer_id) {
-    var formData = new FormData();
-    formData.append('ero', 'customer_details');
-    formData.append('customer_id', customer_id);
+      var customer_id = '<?php echo $id_customer; ?>';
+      customers(customer_id)
 
-    fetch('./controller/customer.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+      function customers(customer_id) {
+        var formData = new FormData();
+        formData.append('ero', 'customer_details');
+        formData.append('customer_id', customer_id);
+
+        fetch('./controller/customer.php', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(message => {
+            document.getElementById('details_customer').innerHTML = message;
+
+
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            swal("Error", "An error occurred while processing your request", "error");
+          });
+
+
+      }
+
+      function accept(id_subscription) {
+        if (id_subscription != null) {
+          swal({
+              title: "Are you sure?",
+              text: "Once accepted, you will not be able to cancell this order!",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                var formData = new FormData();
+                formData.append('ero', 'accept_subscription');
+                formData.append('id_subscription', id_subscription);
+
+
+                fetch('controller/customer.php', {
+                    method: 'POST',
+                    body: formData
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.status === 'Success') {
+                      swal("Good Job", data.message, "success");
+                      customers(customer_id)
+
+                    } else if (data.status === 'Error') {
+                      swal("Opps!", data.message, "warning");
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                  });
+
+              } else {
+                swal("OK!");
+              }
+            });
         }
-        return response.text();
-      })
-      .then(message => {
-        document.getElementById('details_customer').innerHTML = message;
 
-      
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        swal("Error", "An error occurred while processing your request", "error");
-      });
+      }
 
-   
-  }
+
+      function deny(id_subscription) {
+        if (id_subscription != null) {
+          swal({
+              title: "Are you sure?",
+              text: "Once denied, you will not be able to accept this order!",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                var formData = new FormData();
+                formData.append('ero', 'deny_subscription');
+                formData.append('id_subscription', id_subscription);
+
+
+                fetch('controller/customer.php', {
+                    method: 'POST',
+                    body: formData
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.status === 'Success') {
+                      swal("Good Job", data.message, "success");
+                      customers(customer_id)
+
+                    } else if (data.status === 'Error') {
+                      swal("Opps!", data.message, "warning");
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                  });
+
+              } else {
+                swal("OK!");
+              }
+            });
+        }
+
+      }
+
+      function end_training(id_subscription) {
+        if (id_subscription != null) {
+          swal({
+              title: "Are you sure?",
+              text: "Once ended, you will not be able to change the status to this order!",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                var formData = new FormData();
+                formData.append('ero', 'end_subscription');
+                formData.append('id_subscription', id_subscription);
+
+
+                fetch('controller/customer.php', {
+                    method: 'POST',
+                    body: formData
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.status === 'Success') {
+                      swal("Good Job", data.message, "success");
+                      customers(customer_id)
+
+                    } else if (data.status === 'Error') {
+                      swal("Opps!", data.message, "warning");
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                  });
+
+              } else {
+                swal("OK!");
+              }
+            });
+        }
+
+      }
+
+      function img(imageUrl) {
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = "../../../fitness_img/user/" + imageUrl;
+      }
     </script>
 <?php
   } else {

@@ -68,8 +68,8 @@
             <!-- Content -->
 
             <div class="container-fluid flex-grow-1 container-p-y">
-              <!-- Layout Demo -->
-                           <!-- Basic Bootstrap Table -->
+            
+
                            <div class="card">
                             <h5 class="card-header">Exercices</h5>
                             <div class="card-body">
@@ -77,18 +77,19 @@
                                 Please add some exercises for sets and reps. They will be customized for each customer.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                               </div>
+                              <form id="add_exercice" method="POST">
                               <div class="row mb-3 mt-3">
                                 <div class="col-lg-4 col-md-4 col-12">
                                   <div class="mb-3">
                                     <label for="email" class="form-label">Title *</label>
-                                    <input type="text" class="form-control" id="email" name="email" placeholder="exercice name" />
+                                    <input type="text" class="form-control" id="email" name="title" placeholder="exercice name" />
                                   </div>
 
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-12">
                                   <div class="mb-3">
                                     <label for="defaultSelect" class="form-label">Target muscle *</label>
-                                    <select id="defaultSelect" class="form-select">
+                                    <select id="defaultSelect" class="form-select" name="target_muscle">
                                       <option value="upper chest">Upper chest</option>
                                       <option value="lower chest">Lower chest</option>
                                       <option value="middle chest">Middle chest</option>
@@ -113,10 +114,7 @@
                                       <option value="Full Body">Full Body</option>
 
                                     </select>
-                                  </div>
-                                  
-                                  
-
+                                  </div>   
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-12">
                                   <div class="mb-3">
@@ -129,7 +127,7 @@
                                   
                                   <div class="mb-3">
                                     <label class="form-label" for="basic-default-message">Description and instructions *</label>
-                                    <textarea id="basic-default-message" class="form-control"  style="height: 100px;"></textarea>
+                                    <textarea id="basic-default-message" class="form-control" name="description"  style="height: 100px;"></textarea>
                                   </div>
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-12">
@@ -138,6 +136,7 @@
                                 </div>
                                 <button class="btn btn-success">Submit</button>
                               </div>
+                              </form>
                             </div>
                             
                           </div>
@@ -162,6 +161,7 @@
       <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
+    <script src="../assets/js/sweet.js"></script>
 
     
     <!-- Core JS -->
@@ -179,9 +179,32 @@
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
 
-    <!-- Page JS -->
-
-    <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
+<script>
+  document.getElementById('add_exercice').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    var formData = new FormData(this);
+    formData.append('ero', 'add_exercice');
+
+
+    fetch('./controller/program.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'Success') {
+            swal("Good Job", data.message, "success");
+        } else if (data.status === 'Error') {
+            swal("Opps!", data.message, "warning");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+</script>
