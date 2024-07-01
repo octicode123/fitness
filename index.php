@@ -51,9 +51,9 @@
                                 <span data-animation="fadeInLeft" data-delay="0.1s">Hi This is  AHM FITNESS</span>
                                 <h1 data-animation="fadeInLeft" data-delay="0.4s">Your online gym Trainer</h1>
                                 <div class="text-center">
-                                    <a href="courses.html" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Bodybuilding</a>
-                                    <a href="courses.html" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Powerlifiting</a>
-                                    <a href="courses.html" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Crossfit</a>
+                                    <a href="coach.php?q=" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Bodybuilding</a>
+                                    <a href="coach.php?q=" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Powerlifiting</a>
+                                    <a href="coach.php?q=" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Crossfit</a>
                                 </div>
                                 
 
@@ -419,9 +419,9 @@
                         check academic essays.</p>
                         <p class="mb-40">Task One, how to approach the task and the language needed for a successful answer. You’ll 
                         examine Task Two questions and learn how to plan, write and check academic essays.</p>
-                        <a href="courses.html" class="border-btn">Bodybuilding</a>
-                        <a href="courses.html" class="border-btn">Powerlifiting</a>
-                        <a href="courses.html" class="border-btn">Crossfit</a>
+                        <a href="coach.php?q=" class="border-btn">Bodybuilding</a>
+                        <a href="coach.php?q=" class="border-btn">Powerlifiting</a>
+                        <a href="coach.php?q=" class="border-btn">Crossfit</a>
 
                     </div>
                 </div>
@@ -571,21 +571,10 @@
 <!-- Jquery Plugins, main Jquery -->	
 <script src="./assets/js/plugins.js"></script>
 <script src="./assets/js/main.js"></script>
+<!-- header & footer -->	
+
+<script src="./assets/js/header-footer.js"></script>
+
 
 </body>
 </html>
-<script>
-    fetch('./components/header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('header').innerHTML = data;
-        })
-        .catch(error => console.error('Error loading HTML:', error));
-
-        fetch('./components/footer.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('footer').innerHTML = data;
-        })
-        .catch(error => console.error('Error loading HTML:', error));
-</script>
