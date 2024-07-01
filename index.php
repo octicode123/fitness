@@ -1,3 +1,6 @@
+<?php
+require_once "pdo.php"; 
+?>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
@@ -51,9 +54,9 @@
                                 <span data-animation="fadeInLeft" data-delay="0.1s">Hi This is  AHM FITNESS</span>
                                 <h1 data-animation="fadeInLeft" data-delay="0.4s">Your online gym Trainer</h1>
                                 <div class="text-center">
-                                    <a href="coach.php?q=" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Bodybuilding</a>
-                                    <a href="coach.php?q=" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Powerlifiting</a>
-                                    <a href="coach.php?q=" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Crossfit</a>
+                                    <a href="coachs?q=bodybuilding" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Bodybuilding</a>
+                                    <a href="coachs?q=powerlifting" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Powerlifiting</a>
+                                    <a href="coachs?q=crossfit" class="border-btn hero-btn mx-1" data-animation="fadeInLeft" data-delay="0.8s">Crossfit</a>
                                 </div>
                                 
 
@@ -419,9 +422,9 @@
                         check academic essays.</p>
                         <p class="mb-40">Task One, how to approach the task and the language needed for a successful answer. You’ll 
                         examine Task Two questions and learn how to plan, write and check academic essays.</p>
-                        <a href="coach.php?q=" class="border-btn">Bodybuilding</a>
-                        <a href="coach.php?q=" class="border-btn">Powerlifiting</a>
-                        <a href="coach.php?q=" class="border-btn">Crossfit</a>
+                        <a href="coachs?q=" class="border-btn">Bodybuilding</a>
+                        <a href="coachs?q=" class="border-btn">Powerlifiting</a>
+                        <a href="coachs?q=" class="border-btn">Crossfit</a>
 
                     </div>
                 </div>
@@ -573,7 +576,7 @@
 <script src="./assets/js/main.js"></script>
 <!-- header & footer -->	
 
-<script src="./assets/js/header-footer.js"></script>
+<script src="./assets/js/header-footer.js?v=2"></script>
 
 
 </body>
