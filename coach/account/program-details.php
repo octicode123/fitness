@@ -190,6 +190,7 @@ if (count($result_exercises) > 0) {
             <div class="mb-3">
                 <input type="number" class="form-control" id="exampleFormControlInput1" value="<?php echo $train["reps"];?>" name="reps[]" placeholder="reps">
             </div>
+        </div>
             <?php
 
             }else{
@@ -213,12 +214,12 @@ if (count($result_exercises) > 0) {
             <div class="mb-3">
                 <input type="number" class="form-control" id="exampleFormControlInput1" name="reps[]" placeholder="reps">
             </div>
+        </div>
                 <?php
             }
         }
         ?>
      
-        </div>
         <!-- Exercise end -->
 <?php
     }
