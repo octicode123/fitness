@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 28, 2024 at 07:48 PM
+-- Generation Time: Jul 02, 2024 at 02:05 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.2.4
 
@@ -31,7 +31,7 @@ CREATE TABLE `coach_account` (
   `coach_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `full_name` varchar(20) NOT NULL CHECK (octet_length(`full_name`) > 0),
-  `about_me` varchar(255) NOT NULL,
+  `about_me` varchar(500) NOT NULL,
   `phone` varchar(13) NOT NULL CHECK (octet_length(`phone`) >= 10 and octet_length(`phone`) <= 13),
   `domain` varchar(50) NOT NULL CHECK (octet_length(`domain`) > 0),
   `city` varchar(20) NOT NULL CHECK (octet_length(`city`) > 0),
@@ -46,7 +46,7 @@ CREATE TABLE `coach_account` (
 --
 
 INSERT INTO `coach_account` (`coach_id`, `user_id`, `full_name`, `about_me`, `phone`, `domain`, `city`, `state`, `zipcode`, `country`, `picture`) VALUES
-(1, 1, 'Amine Ait Bella', 'Hello my name is amine ', '0772525374', 'Bodybuilding', 'Agadir', 'souss', '83350', 'Morocco', '634425667d4c72a4538.png');
+(1, 1, 'Amine Ait Bella', 'Hello! I am Amine, a dedicated and passionate coach with a mission to empower individuals to achieve their fullest potential. With a background in bodybuilding, I bring a wealth of knowledge and experience to help you navigate your personal and professional journeys.', '0772525374', 'Bodybuilding', 'Agadir', 'souss', '83350', 'Morocco', '8045396683320b364e4.png');
 
 -- --------------------------------------------------------
 
@@ -188,15 +188,16 @@ CREATE TABLE `subscription` (
   `coach_id` int(11) DEFAULT NULL,
   `status` enum('pending','accepted','cancelled','end') DEFAULT NULL,
   `sub_date` datetime DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL
+  `price` decimal(10,2) NOT NULL,
+  `temporary` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `subscription`
 --
 
-INSERT INTO `subscription` (`id_subscription`, `user_id`, `coach_id`, `status`, `sub_date`, `price`) VALUES
-(1, 5, 1, 'accepted', '2024-06-27 12:57:30', '1000.00');
+INSERT INTO `subscription` (`id_subscription`, `user_id`, `coach_id`, `status`, `sub_date`, `price`, `temporary`) VALUES
+(1, 5, 1, 'accepted', '2024-06-27 12:57:30', '1000.00', NULL);
 
 -- --------------------------------------------------------
 
@@ -450,7 +451,7 @@ ALTER TABLE `nutrition_training_program`
 -- AUTO_INCREMENT for table `subscription`
 --
 ALTER TABLE `subscription`
-  MODIFY `id_subscription` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_subscription` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `training_program`

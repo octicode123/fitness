@@ -1,9 +1,14 @@
 <?php
 require_once "pdo.php";
 if (isset($_GET["q"]) && !empty($_GET["q"])) {
-    $domain = htmlspecialchars($_GET["q"]);
-    $domains = array("bodybuilding", "crossfit", "powerlifting", "boxing");
-    if (!in_array($domain, $domains)) {
+    $coach_id = htmlspecialchars($_GET["q"]);
+    $coach = $pdo->prepare("SELECT c.*,cp.* FROM coach_account as c 
+                            INNER JOIN coach_price as cp ON c.coach_id=cp.coach_id 
+                            WHERE  c.coach_id=:coach_id LIMIT 1");
+    $coach->bindParam(':coach_id', $coach_id);
+    $coach->execute();
+    $coach_result = $coach->fetch();
+    if (!$coach_result) {
         header('location:index.php');
     } else {
 ?>
@@ -58,7 +63,7 @@ if (isset($_GET["q"]) && !empty($_GET["q"])) {
                             <div class="row">
                                 <div class="col-xl-12">
                                     <div class="hero-cap hero-cap2 pt-70">
-                                        <h2>Coaches</h2>
+                                        <h2>Coach details</h2>
                                     </div>
                                 </div>
                             </div>
@@ -71,31 +76,27 @@ if (isset($_GET["q"]) && !empty($_GET["q"])) {
                     <div class="container">
                         <div class="row">
                             <?php
-                            $coaches = $pdo->prepare('SELECT c.*,cp.* FROM coach_account as c 
-                            INNER JOIN coach_price as cp ON c.coach_id=cp.coach_id 
-                            WHERE c.domain LIKE :domain');
-                            $coaches->bindParam(':domain', $domain);
-                            $coaches->execute();
-                            $coaches_result = $coaches->fetchAll();
-                            if (count($coaches_result) > 0) {
 
-                                foreach ($coaches_result as $row) {
+                            if ($coach_result) {
+
                             ?>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="single-cat text-center mb-30 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".2s">
-                                            <div class="cat-icon">
-                                                <img src="../fitness_img/coach/<?php echo $row["picture"]; ?>" width="100%" alt="">
-                                            </div>
-                                            <div class="cat-cap">
-                                                <h5><a href="coach-details.php?q=<?php echo $row["coach_id"]; ?>" target="_blank"><?php echo $row["full_name"]; ?></a></h5>
-                                                <p><?php echo $row["about_me"]; ?> </p>
-                                                <h5><a href="coach-details.php?q=<?php echo $row["coach_id"]; ?>" target="_blank"><?php echo $row["price"]; ?> MAD</a></h5>
-
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="single-cat text-center mb-30 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".2s">
+                                        <div class="cat-icon">
+                                            <img src="../fitness_img/coach/<?php echo $coach_result["picture"]; ?>" alt="">
+                                        </div>
+                                        <div class="cat-cap">
+                                            <h5><a href="services.html"><?php echo $coach_result["full_name"]; ?></a></h5>
+                                            <p><?php echo $coach_result["about_me"]; ?> </p>
+                                            <h5><a href="services.html"><?php echo $coach_result["price"]; ?> MAD</a></h5>
+                                            <div class="text-center ">
+                                                <button  onclick="subscribe('<?php echo $coach_result['coach_id']; ?>')"  class="btn">Hire</button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             <?php
-                                }
+
                             } else {
                                 echo "<h1 class='text-center text-light'>Search result  : There is no coach for your selected domain</h1>";
                             }
@@ -104,14 +105,14 @@ if (isset($_GET["q"]) && !empty($_GET["q"])) {
                         </div>
                     </div>
                 </section>
-                
-   
+
+
                 <!-- Blog Area End -->
                 <!--? video_start -->
-             
+
                 <!-- video_end -->
                 <!-- ? services-area -->
-              
+
             </main>
             <div id="footer"></div>
 
@@ -160,12 +161,50 @@ if (isset($_GET["q"]) && !empty($_GET["q"])) {
             <!-- Jquery Plugins, main Jquery -->
             <script src="./assets/js/plugins.js"></script>
             <script src="./assets/js/main.js"></script>
+            <script src="./assets/js/sweet.js"></script>
+
             <!-- header & footer -->
 
             <script src="./assets/js/header-footer.js?v=1"></script>
         </body>
 
         </html>
+        <script>
+
+
+
+    function subscribe(coach_id){
+        if(coach_id!=null){
+
+            var formData = new FormData();
+    formData.append('ero', 'checkout');
+    formData.append('coach_id', coach_id);
+
+
+    fetch('./backend/checkout.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'Success') {
+            swal("Good Job", data.message, "success");
+            setTimeout(function() {
+                window.location.href = 'user/account/login.php';
+            }, 2000); 
+        } else if (data.status === 'Error') {
+            swal("Opps!", data.message, "warning");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+        }else{
+            swal("error");
+        }
+    }
+        </script>
 <?php
     }
 } else {
